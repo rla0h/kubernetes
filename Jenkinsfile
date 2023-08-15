@@ -1,6 +1,5 @@
 pipeline {
     agent any
-
     environment {
         KUBECONFIG = '/home/pin/kube_adm.conf'
         pub_pod = '/home/pin/pub-statefulset.yaml'
@@ -52,9 +51,9 @@ pipeline {
             steps {
                 script {
                     def pub_source = '/home/pin/NWT_TestPublisher.java'
-                    def podName = sh(script: "kubectl get pods -o name | grep my* | cut -d/ -f 2", returnStdout: true).trim()
-                    echo "${podName}"
-                    sh "kubectl exec -it ${podName} -- sh -c 'cat ${pub_source} > hi.java'"
+                    def podName = sh(script: "kubectl get pods -o name | grep my* | cut -d/ -f 2", returnStdout: true).trim()                   
+                    sh "kubectl cp ${pub_source} ${podName}:./hello.java"
+                    //sh "kubectl exec -it ${podName} -- sh -c 'cat ${pub_source} > hi.java'"
                 }
             }
         }
