@@ -49,5 +49,16 @@ pipeline {
             }
         }
 
+        stage('Apply Source') {
+            steps [
+                script {
+                    def pub_source = '/home/pin/NWT_TestPublisher'
+                    def content = "Hello!"
+                    sh "kubectl exec -it opendds-pub-0 -- /bin/bash"
+                    writeFile file: 'hello.txt', txt: content
+                }
+            ]
+        }
+
     }
 }
