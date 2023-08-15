@@ -52,8 +52,10 @@ pipeline {
                 script {
                     def pub_source = '/home/pin/NWT_TestPublisher.java'
                     def podName = sh(script: "kubectl get pods -o name | grep opendds-pub* | cut -d/ -f 2", returnStdout: true).trim()                   
-                    sh "kubectl cp ${pub_source} ${podName}:../NWT/test/NWT_TestPublisher.java"
-                    sh "kubectl exec -it ${podName} -- sh -c 'javac -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:classes ../NWT/test/NWT_TestPublisher.java'"
+                    sh "kubectl cp ${pub_source} ${podName}:../NWT/src/NWT_TestPublisher.java"
+                    sh "kubectl exec -it ${podName} -- sh -c 'javac -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:classes ../NWT/src/NWT_TestPublisher.java'"
+                    sh "kubectl exec -it ${podName} -- sh -c 'rm /DDS/NWT/bin/NWT_Testpublisher.class'"
+                    sh "kubectl exec -it ${podName} -- sh -c 'mv /DDS/NWT/src/NWT_Testpublisher.class /DDS/NWT/bin/'"
                     //sh "kubectl exec -it ${podName} -- sh -c 'cat ${pub_source} > hi.java'"
                 }
             }
