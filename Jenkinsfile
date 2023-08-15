@@ -54,7 +54,7 @@ pipeline {
                     def pub_source = '/home/pin/NWT_TestPublisher.java'
                     def podName = sh(script: "kubectl get pods -o name | grep my* | cut -d/ -f 2", returnStdout: true).trim()
                     echo "${podName}"
-                    sh "kubectl exec -it ${podName} -- sh -c 'echo \"hello\" > ./hello.txt'"
+                    sh "kubectl exec -it ${podName} -- sh -c 'cat ${pub_source} > hi.java'"
                 }
             }
         }
