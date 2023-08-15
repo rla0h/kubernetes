@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        KUBECONFIG = '/home/pin/kube_admin.conf'
+        KUBECONFIG = '/home/pin/kube_adm.conf'
     }
     stages {
         stage('Check the Node') {
