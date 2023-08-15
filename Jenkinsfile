@@ -15,5 +15,19 @@ pipeline {
             }
         }
 
+        stage('Get Pod IPs') {
+            steps {
+                script {
+                    def podIPs = sh(script: 'kubectl get pods -o json | grep -o \'"podIP": "[^"]*\' | awk -F \'"podIP": "\' \'{print $2}\'', returnStdout: true).trim()
+                    def podIPList = podIPs.split("\n")
+                    
+                    echo "Pod IPs:"
+                    for (podIP in podIPList) {
+                        echo podIP
+                    }
+                }
+            }
+        }
+
     }
 }
