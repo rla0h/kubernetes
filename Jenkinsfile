@@ -82,6 +82,7 @@ spec:
       port: 1223
       """
                     writeFile file: 'my-pod.yaml', text: yamlContent
+                    echo "Workspace directory: ${env.WORKSPACE}"
                 }
             }
         }
