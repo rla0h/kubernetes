@@ -48,9 +48,8 @@ pipeline {
                 }
             }
         }
-
         stage('Apply Source') {
-            steps [
+            steps {
                 script {
                     def pub_source = '/home/pin/NWT_TestPublisher.java'
                     def podName = sh(script: "kubectl get pods -o name | grep *pub* | cut -d/ -f 2", returnStdout: true).trim()
@@ -61,7 +60,7 @@ pipeline {
                     EOF
                     """
                 }
-            ]
+            }
         }
 
     }
