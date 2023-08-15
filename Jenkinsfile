@@ -18,13 +18,23 @@ pipeline {
         stage('Get Pod IPs') {
             steps {
                 script {
-                    def podIPs = sh(script: 'kubectl get pods -o json | grep -o \'"podIP": "[^"]*\' | awk -F \'"podIP": "\' \'{print $2}\'', returnStdout: true).trim()
-                    def podIPList = podIPs.split("\n")
+                    def pub_podIP = sh(script: 'kubectl get pods -l app=pub -o json | grep -o \'"podIP": "[^"]*\' | awk -F \'"podIP": "\' \'{print $2}\'', returnStdout: true).trim()
+                    //def podIPList = podIPs.split("\n")
                     
-                    echo "Pod IPs:"
-                    for (podIP in podIPList) {
-                        echo podIP
-                    }
+                    echo "Pub_Pod IPs:"
+                    echo pub_podIP
+
+                    def sub_podIP = sh(script: 'kubectl get pods -l app=sub -o json | grep -o \'"podIP": "[^"]*\' | awk -F \'"podIP": "\' \'{print $2}\'', returnStdout: true).trim()
+                    
+                    echo "Sub_Pod IPs:"
+                    echo sub_podIP
+                    ${sub} = sub_podIP
+
+                    echo "value of variable : ${sub}"
+
+                    //for (podIP in podIPList) {
+                    //    echo podIP
+                    //}
                 }
             }
         }
