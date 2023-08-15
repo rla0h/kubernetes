@@ -28,7 +28,7 @@ pipeline {
                     
                     echo "Sub_Pod IPs:"
                     echo sub_podIP
-                    ${sub} = sub_podIP
+                    def sub = sub_podIP
 
                     echo "value of variable : ${sub}"
 
