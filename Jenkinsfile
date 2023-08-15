@@ -44,7 +44,7 @@ pipeline {
             steps { 
                 script {
                     def yamlFilePath = '/home/pin/my-pod.yaml'
-                    sh "kubctl apply -f ${yamlFilePath}"
+                    sh "kubectl apply -f ${yamlFilePath}"
                 }
             }
         }
