@@ -43,46 +43,8 @@ pipeline {
         stage('Apply on Pods') {
             steps { 
                 script {
-                    def yamlContent = """
-                    apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-    name: opendds-sub
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: sub
-  template:
-    metadata:
-      labels:
-        app: sub
-    spec:
-      nodeName: worker2
-      containers:
-      - name: sub
-        image: happykimyh/opendds:v1.3
-        imagePullPolicy: Always
-        securityContext:
-          runAsUser: 0
-        command: ['sh', '-c', "while :; do echo '.'; sleep 5 ; done"]
-        ports:
-          - containerPort: 1223
----
-
-apiVersion: v1
-kind: Service
-metadata:
-   name: sub-service
-spec:
-   selector:
-     app: pub
-   ports:
-    - protocol: TCP
-      port: 1223
-      """
-                    writeFile file: 'my-pod.yaml', text: yamlContent
-                    echo "Workspace directory: ${env.WORKSPACE}"
+                    def yamlFilePath = '/home/pin/my-pod.yaml'
+                    sh "kubctl apply -f ${yamlFilePath}"
                 }
             }
         }
