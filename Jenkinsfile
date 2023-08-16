@@ -52,14 +52,14 @@ pipeline {
                     def subserviceName = 'sub-service'
                     def reposerviceName = 'repo-service'
 
-                    def pubserviceInfo = sh(script: "kubectl get service ${pubserviceName} -o json", returnStdout: true).trim()
-                    def subserviceInfo = sh(script: "kubectl get service ${subserviceName} -o json", returnStdout: true).trim()
-                    def reposerviceInfo = sh(script: "kubectl get service ${reposerviceName} -o json", returnStdout:true).trim()
+                    //def pubserviceInfo = sh(script: "kubectl get service ${pubserviceName} -o json", returnStdout: true).trim()
+                    //def subserviceInfo = sh(script: "kubectl get service ${subserviceName} -o json", returnStdout: true).trim()
+                    //def reposerviceInfo = sh(script: "kubectl get service ${reposerviceName} -o json", returnStdout:true).trim()
+                    
 
-                    def json = readJSON(text: pubserviceInfo)
-                    def pubserviceIP = json.spec.clusterIP
-
-
+                    def pubserviceIP = sh(script: "kubectl get service ${pubserviceName} --template='{{.spec.clusterIP}}'", returnStdout: true).trim()
+                    def subserviceIP = sh(script: "kubectl get service ${subserviceName} --template='{{.spec.clusterIP}}'", returnStdout: true).trim()
+                    def reposerviceIP = sh(script: "kubectl get service ${reposerviceName} --template='{{.spec.clusterIP}}'", returnStdout: true).trim()
                     //def json = readJSON(text: subserviceInfo)
                     //def subserviceIP = json.spec.clusterIP
 
