@@ -37,7 +37,8 @@ pipeline {
         stage('Install jq') {
             steps {
                 script {
-                    sh 'apt-get install -y jq'
+                    sh 'sudo apt-get update'
+                    sh 'sudo apt-get install -y jq'
                 }
             }
         }
