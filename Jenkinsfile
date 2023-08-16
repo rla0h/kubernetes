@@ -60,8 +60,8 @@ pipeline {
                     def reposerviceIP = repojson.spec.clusterIP
                     def pubjson = new groovy.json.JsonSlurperClassic().parseText(pubserviceInfo)
                     def pubserviceIP = pubjson.spec.clusterIP
-                    def subojson = new groovy.json.JsonSlurperClassic().parseText(subserviceInfo)
-                    def subserviceIP = pubjson.spec.clusterIP
+                    def subjson = new groovy.json.JsonSlurperClassic().parseText(subserviceInfo)
+                    def subserviceIP = subjson.spec.clusterIP
 
                     /*
                     def pubserviceIP = sh(script: "echo '${pubserviceInfo}' | jq -r '.spec.clusterIP'", returnStdout: true).trim()
