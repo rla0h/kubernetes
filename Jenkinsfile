@@ -34,6 +34,7 @@ pipeline {
                 }
             }
         }
+        /*
         stage('Get Service Pod IP and Apply to /etc/hosts (on Repository)') {
             steps {
                 script {
@@ -48,24 +49,24 @@ pipeline {
                     def pubserviceIP = sh(script: "kubectl get service ${pubserviceName} --template='{{.spec.clusterIP}}'", returnStdout: true).trim()
                     def subserviceIP = sh(script: "kubectl get service ${subserviceName} --template='{{.spec.clusterIP}}'", returnStdout: true).trim()
                     def reposerviceIP = sh(script: "kubectl get service ${reposerviceName} --template='{{.spec.clusterIP}}'", returnStdout: true).trim()
-                    /*
-                    def pubcombinedInfo = "${pubserviceIP}\t${pubpodNames}\n"
-                    def subcombinedInfo = "${subserviceIP}\t${subpodNames}\n"
+                    
+                    //def pubcombinedInfo = "${pubserviceIP}\t${pubpodNames}\n"
+                    //def subcombinedInfo = "${subserviceIP}\t${subpodNames}\n"
 
-                    def pservicepath = 'pub-service-ip.txt'
-                    def sservicepath = 'sub-service-ip.txt'
-                    writeFile file: ${pservicepath}, text: pubcombinedInfo
-                    writeFile file: ${sservicepath}, text: subcombinedInfo
+                    //def pservicepath = 'pub-service-ip.txt'
+                    //def sservicepath = 'sub-service-ip.txt'
+                    //writeFile file: ${pservicepath}, text: pubcombinedInfo
+                    //writeFile file: ${sservicepath}, text: subcombinedInfo
 
-                    sh "kubectl cp ${pservicepath} ${repopodName}:./pub-service.txt'"
-                    sh "kubectl cp ${sservicepath} ${repopodName}:./sub-service.txt'"
+                    //sh "kubectl cp ${pservicepath} ${repopodName}:./pub-service.txt'"
+                    //sh "kubectl cp ${sservicepath} ${repopodName}:./sub-service.txt'"
 
                     sh "kubectl exec -it ${repopodName} -- sh -c 'cat pub-service.txt >> /etc/hosts'"
-                    sh "kubectl exec -it ${repopodName} -- sh -c 'cat sub-service.txt >> /etc/hosts'"*/
+                    sh "kubectl exec -it ${repopodName} -- sh -c 'cat sub-service.txt >> /etc/hosts'"
                     sh "kubectl exec -it ${repopodName} -- sh -c '/DDS/OpenDDS-DDS-3.23.1/bin/./DCPSInfoRepo -o /DDS/OpenDDS-DDS-3.23.1/lib/* -ORBListenEndpoints iiop://${reposerviceIP}:1212'"
                 }
             }
-        }
+        }*/
 
         
         stage('Apply Source Pub') {
@@ -78,7 +79,7 @@ pipeline {
                     sh "kubectl exec -it ${podName} -- sh -c 'rm /DDS/NWT/bin/NWT_TestPublisher.class'"
                     sh "kubectl exec -it ${podName} -- sh -c 'mv /DDS/NWT/src/NWT_TestPublisher.class /DDS/NWT/bin/'"
 
-                    sh "kubectl exec -it ${podName} -- sh -c '/DDS/NWT/bin/java -ea -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:classes -Djava.library.path=$DDS_ROOT/lib NWT_TestPublisher -DCPSConfigFile tcp.ini -DCPSTransportDebugLevel 0 -w'"                    
+                    //sh "kubectl exec -it ${podName} -- sh -c '/DDS/NWT/bin/java -ea -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:classes -Djava.library.path=$DDS_ROOT/lib NWT_TestPublisher -DCPSConfigFile tcp.ini -DCPSTransportDebugLevel 0 -w'"                    
                 }
             }
         }
@@ -92,7 +93,7 @@ pipeline {
                     sh "kubectl exec -it ${podName} -- sh -c 'javac -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:classes ../NWT/src/NWT_TestSubscriber.java'"
                     sh "kubectl exec -it ${podName} -- sh -c 'rm /DDS/NWT/bin/NWT_TestSubscriber.class'"
                     sh "kubectl exec -it ${podName} -- sh -c 'mv /DDS/NWT/src/NWT_TestSubscriber.class /DDS/NWT/bin/'"
-                    sh "kubectl exec -it ${podName} -- sh -c '/DDS/NWT/bin/java -ea -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:classes -Djava.library.path=$DDS_ROOT/lib NWT_TestSubscriber -DCPSConfigFile tcp.ini -DCPSTransportDebugLevel 0 -r'"
+                    //sh "kubectl exec -it ${podName} -- sh -c '/DDS/NWT/bin/java -ea -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:classes -Djava.library.path=$DDS_ROOT/lib NWT_TestSubscriber -DCPSConfigFile tcp.ini -DCPSTransportDebugLevel 0 -r'"
                 }
             }
         }
