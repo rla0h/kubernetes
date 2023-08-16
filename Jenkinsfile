@@ -87,12 +87,12 @@ pipeline {
         stage('Apply Source Sub') {
             steps {
                 script {
-                    def pub_source = '/home/pin/NWT_TestSubscriber.java'
+                    def sub_source = '/home/pin/NWT_TestSubscriber.java'
                     def podName = sh(script: "kubectl get pods -o name | grep opendds-sub* | cut -d/ -f 2", returnStdout: true).trim()                   
-                    sh "kubectl cp ${pub_source} ${podName}:../NWT/src/NWT_TestSubscriber.java"
+                    sh "kubectl cp ${psb_source} ${podName}:../NWT/src/NWT_TestSubscriber.java"
                     sh "kubectl exec -it ${podName} -- sh -c 'javac -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:classes ../NWT/src/NWT_TestSubscriber.java'"
                     sh "kubectl exec -it ${podName} -- sh -c 'rm /DDS/NWT/bin/NWT_TestSubscriber.class'"
-                    sh "kubectl exec -it ${podName} -- sh -c 'mv /DDS/NWT/src/NWT_TestSubscriber.class /DDS/NWT/bin/'"
+                    sh "kubectl exec -it ${podName} -- sh -c 'mv /DDS/NWT/src/NWT_TestSubscriber.class /DDS/NWT/bin/.'"
                     //sh "kubectl exec -it ${podName} -- sh -c '/DDS/NWT/bin/java -ea -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:classes -Djava.library.path=$DDS_ROOT/lib NWT_TestSubscriber -DCPSConfigFile tcp.ini -DCPSTransportDebugLevel 0 -r'"
                 }
             }
