@@ -59,6 +59,9 @@ pipeline {
 
                     def pubcombinedInfo = "${pubserviceIP}\t${pubpodNames}\n"
                     def subcombinedInfo = "${subserviceIP}\t${subpodNames}\n"
+                    echo ${pubcombinedInfo}
+                    echo ${subcombinedInfo}
+
                     def pservicepath = 'pub-service-ip.txt'
                     def sservicepath = 'sub-service-ip.txt'
                     writeFile file: ${pservicepath}, text: pubcombinedInfo
