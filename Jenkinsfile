@@ -40,7 +40,6 @@ pipeline {
                     def fPath = 'pod-info.txt'
                     writeFile file: fPath, text: podInfo
                     //archiveArtifacts artifacts: fPath, onlyIfSuccessful: false
-                    sh "cp ${filePath} /home/pin"
                 }
             }
         }
