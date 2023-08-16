@@ -34,14 +34,14 @@ pipeline {
                 }
             }
         }
-        stage('Install jq') {
+        /*stage('Install jq') {
             steps {
                 script {
                     sh 'echo 1234 | sudo -S sudo apt-get update'
                     sh 'echo 1234 | sudo -S sudo apt-get install -y jq'
                 }
             }
-        }
+        }*/
         stage('Get Service Pod IP and Apply to /etc/hosts (on Repository)') {
             steps {
                 script {
