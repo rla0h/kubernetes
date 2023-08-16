@@ -57,13 +57,13 @@ pipeline {
                     def subserviceIP = sh(script: "kubectl get service ${subserviceName} --template='{{.spec.clusterIP}}'", returnStdout: true).trim()
                     def reposerviceIP = sh(script: "kubectl get service ${reposerviceName} --template='{{.spec.clusterIP}}'", returnStdout: true).trim()
 
-                    pubcombinedInfo = "${pubserviceIP}\t${pubpodNames}\n"
-                    subcombinedInfo = "${subserviceIP}\t${subpodNames}\n"
+                    def pubcombinedInfo = "${pubserviceIP}\t${pubpodNames}\n"
+                    def subcombinedInfo = "${subserviceIP}\t${subpodNames}\n"
 
                     def pservicepath = 'pub-service-ip.txt'
                     def sservicepath = 'sub-service-ip.txt'
-                    writeFile file: ${pservicepath}, text: pubcombinedInfo
-                    writeFile file: ${sservicepath}, text: subcombinedInfo
+                    writeFile file: ${pservicepath}, text: ${pubcombinedInfo}
+                    writeFile file: ${sservicepath}, text: ${subcombinedInfo}
 
                     sh "kubectl cp ${pservicepath} ${repopodName}:./pub-service.txt'"
                     sh "kubectl cp ${sservicepath} ${repopodName}:./sub-service.txt'"
