@@ -19,6 +19,7 @@ pipeline {
         stage('Get Pod IPs') {
             steps {
                 script {
+                    /*
                     def pub_podIP = sh(script: 'kubectl get pods -l app=pub -o json | grep -o \'"podIP": "[^"]*\' | awk -F \'"podIP": "\' \'{print $2}\'', returnStdout: true).trim()
                     //def podIPList = podIPs.split("\n")
                     
@@ -32,8 +33,8 @@ pipeline {
                     def sub = sub_podIP
                     def pub = pub_podIP
                     echo "value of variable : ${pub}, ${sub}"
-                    def podInfo = sh(script: 'kubectl get pods -o=jsonpath='{range .items[*]}{" "}{.status.podIP}{"\t "}{.metadata.name}{"\n"}{end}' > pod-info.txt
-', returnStdout: true).trim()
+                    */
+                    def podInfo = sh(script: 'kubectl get pods -o=jsonpath='{range .items[*]}{" "}{.status.podIP}{"\t "}{.metadata.name}{"\n"}{end}' > pod-info.txt', returnStdout: true).trim()
                     echo podInfo
                 }
             }
