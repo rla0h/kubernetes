@@ -36,7 +36,7 @@ pipeline {
                     */
                     def podInfo = sh(script: 'kubectl get pods -o=jsonpath=\'{range .items[*]}{.metadata.name}{"\\t"}{.status.podIP}{"\\n"}{end}\'', returnStdout: true).trim()
                     podInfo = podInfo.replaceAll("(?m)^\\s*(.*)\\t(.*)\\s*\$", '$1 $2')
-                    writeFile file: 'pod-info.txt', text: podInfo
+                    writeFile file: '/home/pin/pod-info.txt', text: podInfo
                     archiveArtifacts artifacts: 'pod-info.txt', onlyIfSuccessful: false
                 }
             }
