@@ -57,8 +57,8 @@ pipeline {
                     writeFile file: ${pservicepath}, text: pubcombinedInfo
                     writeFile file: ${sservicepath}, text: subcombinedInfo
 
-                    sh "kubectl exec -it ${repopodName} -- sh -c 'cat ${pservicepath} >> /etc/hosts"
-                    sh "kubectl exec -it ${repopodName} -- sh -c 'cat ${sservicepath} >> /etc/hosts"
+                    sh "kubectl exec -it ${repopodName} -- sh -c 'cat ${pservicepath} >> /etc/hosts'"
+                    sh "kubectl exec -it ${repopodName} -- sh -c 'cat ${sservicepath} >> /etc/hosts'"
 
                     sh "kubectl exec -it ${repopodName} -- sh -c 'DCPSInfoRepo -ORBListenEndpoints iiop://$(hostname -i):1212'"
                 }
