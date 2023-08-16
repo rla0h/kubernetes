@@ -20,7 +20,7 @@ pipeline {
             steps {
                 script {
                     def podInfo = sh(script: 'kubectl get pods -o=jsonpath=\'{range .items[*]}{.status.podIP}{"\\t"}{.metadata.name}{"\\n"}{end}\'', returnStdout: true).trim()
-                    podInfo = podInfo.replaceAll("(?m)^\\s*(.*)\\t(.*)\\s*\$", '$1 $2')
+                    podInfo = podInfo.replaceAll("(?m)^\\s*(.*)\\t(.*)\\s*\$\n", '$1 $2')
                     def pubpodName = sh(script: "kubectl get pods -o name | grep opendds-pub* | cut -d/ -f 2", returnStdout: true).trim()
                     def subpodName = sh(script: "kubectl get pods -o name | grep opendds-sub* | cut -d/ -f 2", returnStdout: true).trim()
                     
