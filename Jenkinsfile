@@ -32,21 +32,30 @@ pipeline {
                     def sub = sub_podIP
                     def pub = pub_podIP
                     echo "value of variable : ${pub}, ${sub}"
+                    def podInfo = sh(script: 'kubectl get pods -o json', returnStdout: true).trim()
+                    def podList = readJSON(text: podInfo)
+                    
+                    def podData = ""
+                    for (pod in podList.items) {
+                        def podName = pod.metadata.name
+                        def podIP = pod.status.podIP
+                        podData += "${podIP}\t${podName}\n"
+                    }
 
-                    //for (podIP in podIPList) {
-                    //    echo podIP
-                    //}
+                    writeFile file: 'pod-info.txt', text: podData
                 }
             }
         }
-        stage('Apply on Pods') {
-            steps { 
-                script {
-                    def yamlFilePath = '/home/pin/my-pod.yaml'
-                    sh "kubectl apply -f ${yamlFilePath}"
-                }
-            }
-        }
+        //stage('Apply on Pods') {
+        //    steps { 
+        //        script {
+        //            def yamlFilePath = '/home/pin/my-pod.yaml'
+        //            sh "kubectl apply -f ${yamlFilePath}"
+        //        }
+        //    }
+        //}
+
+        /*
         stage('Apply Source') {
             steps {
                 script {
@@ -59,7 +68,7 @@ pipeline {
                     //sh "kubectl exec -it ${podName} -- sh -c 'cat ${pub_source} > hi.java'"
                 }
             }
-        }
+        }*/
 
     }
 }
