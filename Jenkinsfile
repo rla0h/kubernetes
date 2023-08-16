@@ -34,8 +34,9 @@ pipeline {
                     def pub = pub_podIP
                     echo "value of variable : ${pub}, ${sub}"
                     */
-                    def podInfo = sh(script: 'kubectl get pods -o=jsonpath='{range .items[*]}{" "}{.status.podIP}{"\t "}{.metadata.name}{"\n"}{end}' > pod-info.txt', returnStdout: true).trim()
-                    echo podInfo
+                    sh '''
+                        kubectl get pods -o=jsonpath='{range .items[*]}{" "}{.status.podIP}{"\t "}{.metadata.name}{"\n"}{end}' > pod-info.txt
+                    '''
                 }
             }
         }
