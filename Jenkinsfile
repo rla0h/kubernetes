@@ -63,6 +63,7 @@ pipeline {
                     sh "kubectl exec -it ${repopodName} -- sh -c 'cat pub-service.txt >> /etc/hosts'"
                     sh "kubectl exec -it ${repopodName} -- sh -c 'cat sub-service.txt >> /etc/hosts'"*/
                     sh "kubectl exec -it ${repopodName} -- sh -c '/DDS/NWT/DCPSInfoRepo -ORBListenEndpoints iiop://${reposerviceIP}:1212'"
+                }
             }
         }
 
