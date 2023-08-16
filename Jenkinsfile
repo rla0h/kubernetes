@@ -41,9 +41,9 @@ pipeline {
                     def pubpodName = sh(script: "kubectl get pods -o name | grep opendds-pub* | cut -d/ -f 2", returnStdout: true).trim()
                     def subpodName = sh(script: "kubectl get pods -o name | grep opendds-sub* | cut -d/ -f 2", returnStdout: true).trim()
                     def repopodName = sh(script: "kubectl get pods -o name | grep reposvc* | cut -d/ -f 2", returnStdout: true).trim()
-                    def pubserviceName = 'pub*'  // Replace with your actual Service name
-                    def subserviceName = 'sub*'
-                    def reposerviceName = 'repo*'
+                    def pubserviceName = 'pub-service'  // Replace with your actual Service name
+                    def subserviceName = 'sub-service'
+                    def reposerviceName = 'repo-service'
 
                     def pubserviceInfo = sh(script: "kubectl get service ${pubserviceName} -o json", returnStdout: true).trim()
                     def subserviceInfo = sh(script: "kubectl get service ${subserviceName} -o json", returnStdout: true).trim()
