@@ -35,7 +35,7 @@ pipeline {
                     echo "value of variable : ${pub}, ${sub}"
                     */
                     sh '''
-                        kubectl get pods -o=jsonpath='{range .items[*]}{" "}{.status.podIP}{"\t "}{.metadata.name}{"\n"}{end}' > pod-info.txt
+                        kubectl get pods -o=jsonpath='{range .items[*]}{.status.podIP}{"\\t"}{.metadata.name}{"\\n"}{end}' > pod-info.txt
                     '''
                 }
             }
