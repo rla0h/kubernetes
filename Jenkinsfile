@@ -34,9 +34,10 @@ pipeline {
                     def pub = pub_podIP
                     echo "value of variable : ${pub}, ${sub}"
                     */
-                    sh '''
-                        kubectl get pods -o=jsonpath='{range .items[*]}{.status.podIP}{"\\t"}{.metadata.name}{"\\n"}{end}' > pod-info.txt
-                    '''
+                    def podInfo = sh(script: 'kubectl get pods -o=jsonpath=\'{range .items[*]}{.status.podIP}{"\t"}{.metadata.name}{"\n"}{end}\'', returnStdout: true).trim()
+                    writeFile file: '/home/pin/pod-info.txt', text: podInfo
+                    archiveArtifacts artifacts: 'pod-info.txt', onlyIfSuccessful: false
+                }
                 }
             }
         }
