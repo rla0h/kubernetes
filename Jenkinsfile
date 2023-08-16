@@ -43,12 +43,15 @@ pipeline {
                     def repopodName = sh(script: "kubectl get pods -o name | grep reposvc* | cut -d/ -f 2", returnStdout: true).trim()
                     def pubserviceName = 'pub*'  // Replace with your actual Service name
                     def subserviceName = 'sub*'
+                    def reposerviceName = 'repo*'
 
                     def pubserviceInfo = sh(script: "kubectl get service ${pubserviceName} -o json", returnStdout: true).trim()
                     def subserviceInfo = sh(script: "kubectl get service ${subserviceName} -o json", returnStdout: true).trim()
+                    def reposerviceInfo = sh(script: "kubectl get service ${reposerviceName} -o json", returnStdout:true).trim()
 
                     def pubserviceIP = sh(script: "echo '${pubserviceInfo}' | jq -r '.spec.clusterIP'", returnStdout: true).trim()
                     def subserviceIP = sh(script: "echo '${subserviceInfo}' | jq -r '.spec.clusterIP'", returnStdout: true).trim()
+                    def reposerviceIP = sh(script: "echo '${reposerviceInfo}' | jq -r '.spec.clusterIP'", returnStdout: true).trim()
 
                     def pubcombinedInfo = "${pubserviceIP}\t${pubpodNames}\n"
                     def subcombinedInfo = "${subserviceIP}\t${subpodNames}\n"
@@ -60,7 +63,7 @@ pipeline {
                     sh "kubectl exec -it ${repopodName} -- sh -c 'cat ${pservicepath} >> /etc/hosts'"
                     sh "kubectl exec -it ${repopodName} -- sh -c 'cat ${sservicepath} >> /etc/hosts'"
 
-                    sh "kubectl exec -it ${repopodName} -- sh -c 'DCPSInfoRepo -ORBListenEndpoints iiop://$(hostname -i):1212'"
+                    sh "kubectl exec -it ${repopodName} -- sh -c '/DDS/NWT/DCPSInfoRepo -ORBListenEndpoints iiop://${reposerviceIP}:1212'"
                 }
             }
         }
