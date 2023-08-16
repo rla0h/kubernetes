@@ -56,13 +56,21 @@ pipeline {
                     def subserviceInfo = sh(script: "kubectl get service ${subserviceName} -o json", returnStdout: true).trim()
                     def reposerviceInfo = sh(script: "kubectl get service ${reposerviceName} -o json", returnStdout:true).trim()
 
+                    def json = readJSON(text: pubserviceInfo)
+                    def pubserviceIP = json.spec.clusterIP
+
+
+                    def json = readJSON(text: subserviceInfo)
+                    def subserviceIP = json.spec.clusterIP
+
+                    /*
                     def repojson = new groovy.json.JsonSlurperClassic().parseText(reposerviceInfo)
                     def reposerviceIP = repojson.spec.clusterIP
                     def pubjson = new groovy.json.JsonSlurperClassic().parseText(pubserviceInfo)
                     def pubserviceIP = pubjson.spec.clusterIP
                     def subjson = new groovy.json.JsonSlurperClassic().parseText(subserviceInfo)
                     def subserviceIP = subjson.spec.clusterIP
-
+                    */
                     /*
                     def pubserviceIP = sh(script: "echo '${pubserviceInfo}' | jq -r '.spec.clusterIP'", returnStdout: true).trim()
                     def subserviceIP = sh(script: "echo '${subserviceInfo}' | jq -r '.spec.clusterIP'", returnStdout: true).trim()
