@@ -34,14 +34,6 @@ pipeline {
                 }
             }
         }
-        /*stage('Install jq') {
-            steps {
-                script {
-                    sh 'echo 1234 | sudo -S sudo apt-get update'
-                    sh 'echo 1234 | sudo -S sudo apt-get install -y jq'
-                }
-            }
-        }*/
         stage('Get Service Pod IP and Apply to /etc/hosts (on Repository)') {
             steps {
                 script {
@@ -56,7 +48,7 @@ pipeline {
                     def pubserviceIP = sh(script: "kubectl get service ${pubserviceName} --template='{{.spec.clusterIP}}'", returnStdout: true).trim()
                     def subserviceIP = sh(script: "kubectl get service ${subserviceName} --template='{{.spec.clusterIP}}'", returnStdout: true).trim()
                     def reposerviceIP = sh(script: "kubectl get service ${reposerviceName} --template='{{.spec.clusterIP}}'", returnStdout: true).trim()
-
+                    /*
                     def pubcombinedInfo = "${pubserviceIP}\t${pubpodNames}\n"
                     def subcombinedInfo = "${subserviceIP}\t${subpodNames}\n"
 
@@ -69,20 +61,10 @@ pipeline {
                     sh "kubectl cp ${sservicepath} ${repopodName}:./sub-service.txt'"
 
                     sh "kubectl exec -it ${repopodName} -- sh -c 'cat pub-service.txt >> /etc/hosts'"
-                    sh "kubectl exec -it ${repopodName} -- sh -c 'cat sub-service.txt >> /etc/hosts'"
-
+                    sh "kubectl exec -it ${repopodName} -- sh -c 'cat sub-service.txt >> /etc/hosts'"*/
                     sh "kubectl exec -it ${repopodName} -- sh -c '/DDS/NWT/DCPSInfoRepo -ORBListenEndpoints iiop://${reposerviceIP}:1212'"
-                }
             }
         }
-        //stage('Apply on Pods') {
-        //    steps { 
-        //        script {
-        //            def yamlFilePath = '/home/pin/my-pod.yaml'
-        //            sh "kubectl apply -f ${yamlFilePath}"
-        //        }
-        //    }
-        //}
 
         
         stage('Apply Source Pub') {
