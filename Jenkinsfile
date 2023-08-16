@@ -34,7 +34,13 @@ pipeline {
                 }
             }
         }
-
+        stage('Install jq') {
+            steps {
+                script {
+                    sh 'apt-get install -y jq'
+                }
+            }
+        }
         stage('Get Service Pod IP and Apply to /etc/hosts (on Repository)') {
             steps {
                 script {
