@@ -32,17 +32,9 @@ pipeline {
                     def sub = sub_podIP
                     def pub = pub_podIP
                     echo "value of variable : ${pub}, ${sub}"
-                    def podInfo = sh(script: 'kubectl get pods -o json', returnStdout: true).trim()
-                    def podList = readJSON(text: podInfo)
-                    
-                    def podData = ""
-                    for (pod in podList.items) {
-                        def podName = pod.metadata.name
-                        def podIP = pod.status.podIP
-                        podData += "${podIP}\t${podName}\n"
-                    }
-
-                    writeFile file: 'pod-info.txt', text: podData
+                    def podInfo = sh(script: 'kubectl get pods -o=jsonpath='{range .items[*]}{" "}{.status.podIP}{"\t "}{.metadata.name}{"\n"}{end}' > pod-info.txt
+', returnStdout: true).trim()
+                    echo podInfo
                 }
             }
         }
