@@ -57,10 +57,8 @@ pipeline {
                     def subserviceIP = sh(script: "kubectl get service ${subserviceName} --template='{{.spec.clusterIP}}'", returnStdout: true).trim()
                     def reposerviceIP = sh(script: "kubectl get service ${reposerviceName} --template='{{.spec.clusterIP}}'", returnStdout: true).trim()
 
-                    def pubcombinedInfo = "${pubserviceIP}\t${pubpodNames}\n"
-                    def subcombinedInfo = "${subserviceIP}\t${subpodNames}\n"
-                    echo ${pubcombinedInfo}
-                    echo ${subcombinedInfo}
+                    pubcombinedInfo = "${pubserviceIP}\t${pubpodNames}\n"
+                    subcombinedInfo = "${subserviceIP}\t${subpodNames}\n"
 
                     def pservicepath = 'pub-service-ip.txt'
                     def sservicepath = 'sub-service-ip.txt'
