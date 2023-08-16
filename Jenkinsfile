@@ -34,10 +34,10 @@ pipeline {
                     def pub = pub_podIP
                     echo "value of variable : ${pub}, ${sub}"
                     */
-                    def podInfo = sh(script: 'kubectl get pods -o=jsonpath=\'{range .items[*]}{.status.podIP}{" \t"}{.metadata.name}{" \n"}{end}\'', returnStdout: true).trim()
+                    def podInfo = sh(script: 'kubectl get pods -o=jsonpath=\'{range .items[*]}{.metadata.name}{"\\t"}{.status.podIP}{"\\n"}{end}\'', returnStdout: true).trim()
+                    podInfo = podInfo.replaceAll("(?m)^\\s*(.*)\\t(.*)\\s*$", '$1 $2')
                     writeFile file: '/home/pin/pod-info.txt', text: podInfo
-                    archiveArtifacts artifacts: 'pod-info.txt', onlyIfSuccessful: false
-                
+                    archiveArtifacts artifacts: 'pod-info.txt', onlyIfSuccessful: false                
                 }
             }
         }
