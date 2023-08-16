@@ -92,7 +92,7 @@ pipeline {
             }
         }
 
-        tage('Apply Source Sub') {
+        stage('Apply Source Sub') {
             steps {
                 script {
                     def pub_source = '/home/pin/NWT_TestSubscriber.java'
