@@ -36,11 +36,16 @@ pipeline {
                     */
                     def podInfo = sh(script: 'kubectl get pods -o=jsonpath=\'{range .items[*]}{.metadata.name}{"\\t"}{.status.podIP}{"\\n"}{end}\'', returnStdout: true).trim()
                     podInfo = podInfo.replaceAll("(?m)^\\s*(.*)\\t(.*)\\s*\$", '$1 $2')
+                    def pubpodName = sh(script: "kubectl get pods -o name | grep opendds-pub* | cut -d/ -f 2", returnStdout: true).trim()
+                    def subpodName = sh(script: "kubectl get pods -o name | grep opendds-sub* | cut -d/ -f 2", returnStdout: true).trim()
                     
                     def fPath = 'pod-info.txt'
                     writeFile file: fPath, text: podInfo
-
-                    archiveArtifacts artifacts: fPath, onlyIfSuccessful: false
+                    
+                    sh "kubectl cp ${fPath} ${pubpodName}:./pod-info.txt"
+                    sh "kubectl cp ${fPath} ${subpodName}:./pod-info.txt"
+                    sh "kubectl exec -it ${pubpodName} -- sh -c 'cat pod-info.txt >> /etc/hosts'"
+                    sh "kubectl exec -it ${subpodName} -- sh -c 'cat pod-info.txt >> /etc/hosts'"
                     //archiveArtifacts artifacts: fPath, onlyIfSuccessful: false
                 }
             }
