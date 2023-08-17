@@ -11,7 +11,11 @@ pipeline {
                 script {
                     def kubectlOutput = sh(script: "kubectl --kubeconfig=${env.KUBECONFIG} get pods", returnStdout: true).trim()
                     def topNodesOutput = sh(script: 'kubectl top nodes', returnStdout: true)
-                    writeFile file: 'top_nodes_output.txt', text: topNodesOutput
+                    def filePath = '/home/pin/node-resource-usage.txt'
+
+                    writeFile file: filePath, text: topNodesOutput
+
+                    echo "Node resource usage saved to ${filePath}"
                 
                     echo kubectlOutput
                 }
