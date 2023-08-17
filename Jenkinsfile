@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        KUBECONFIG = '/home/pin/kube_adm.conf'
+        admKUBECONFIG = '/home/pin/kube_adm.conf'
         pub_pod = '/home/pin/pub-statefulset.yaml'
         sub_pod = '/home/pin/sub-statefulset.yaml'
     }
@@ -9,7 +9,7 @@ pipeline {
         stage('Check the Node') {
             steps {
                 script {
-                    def kubectlOutput = sh(script: "kubectl --kubeconfig=${env.KUBECONFIG} get pods", returnStdout: true).trim()
+                    def kubectlOutput = sh(script: "kubectl --kubeconfig=${env.admKUBECONFIG} get pods", returnStdout: true).trim()
                     def topNodesOutput = sh(script: 'kubectl top nodes', returnStdout: true)
                     
                     echo topNodesOutput                
