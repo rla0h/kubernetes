@@ -10,7 +10,9 @@ pipeline {
             steps {
                 script {
                     def kubectlOutput = sh(script: "kubectl --kubeconfig=${env.KUBECONFIG} get pods", returnStdout: true).trim()
-                    echo "kubectl get pods output:"
+                    def topNodesOutput = sh(script: 'kubectl top nodes', returnStdout: true)
+                    writeFile file: 'top_nodes_output.txt', text: topNodesOutput
+                
                     echo kubectlOutput
                 }
             }
@@ -79,7 +81,7 @@ pipeline {
                     sh "kubectl exec -it ${pubpodName} -- sh -c 'rm /DDS/NWT/bin/NWT_TestPublisher.class'"
                     sh "kubectl exec -it ${pubpodName} -- sh -c 'mv /DDS/NWT/src/NWT_TestPublisher.class /DDS/NWT/bin/'"
 
-                    sh "kubectl exec -it ${pubpodName} -- sh -c 'cd ../NWT/bin && java -ea -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:class -Djava.library.path=/DDS/OpenDDS-DDS-3.23.1/lib/ NWT_TestPublisher -DCPSConfigFile tcp.ini -DCPSTransportDebugLevel 0 -w'"                    
+                    //sh "kubectl exec -it ${pubpodName} -- sh -c 'cd ../NWT/bin && java -ea -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:class -Djava.library.path=/DDS/OpenDDS-DDS-3.23.1/lib/ NWT_TestPublisher -DCPSConfigFile tcp.ini -DCPSTransportDebugLevel 0 -w'"                    
                 }
             }
         }
@@ -93,7 +95,7 @@ pipeline {
                     sh "kubectl exec -it ${subpodName} -- sh -c 'javac -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:classes ../NWT/src/NWT_DataReaderListenerImpl.java'"
                     sh "kubectl exec -it ${subpodName} -- sh -c 'rm /DDS/NWT/bin/NWT_DataReaderListenerImpl.class'"
                     sh "kubectl exec -it ${subpodName} -- sh -c 'mv /DDS/NWT/src/NWT_DataReaderListenerImpl.class /DDS/NWT/bin/.'"
-                    sh "kubectl exec -it ${subpodName} -- sh -c 'cd ../NWT/bin && java -ea -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:classes -Djava.library.path=/DDS/OpenDDS-DDS-3.23.1/lib/ NWT_TestSubscriber -DCPSConfigFile tcp.ini -DCPSTransportDebugLevel 0 -r'"
+                    //sh "kubectl exec -it ${subpodName} -- sh -c 'cd ../NWT/bin && java -ea -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:classes -Djava.library.path=/DDS/OpenDDS-DDS-3.23.1/lib/ NWT_TestSubscriber -DCPSConfigFile tcp.ini -DCPSTransportDebugLevel 0 -r'"
                 }
             }
         }
