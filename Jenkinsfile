@@ -79,7 +79,7 @@ pipeline {
                     sh "kubectl exec -it ${pubpodName} -- sh -c 'rm /DDS/NWT/bin/NWT_TestPublisher.class'"
                     sh "kubectl exec -it ${pubpodName} -- sh -c 'mv /DDS/NWT/src/NWT_TestPublisher.class /DDS/NWT/bin/'"
 
-                    sh "kubectl exec -it ${podName} -- sh -c 'java -ea -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:classes -Djava.library.path=$DDS_ROOT/lib ../NWT/bin/NWT_TestPublisher -DCPSConfigFile tcp.ini -DCPSTransportDebugLevel 0 -w'"                    
+                    sh "kubectl exec -it ${podName} -- sh -c 'java -ea -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:classes -Djava.library.path=$DDS_ROOT/lib ../NWT/bin/NWT_TestPublisher -DCPSConfigFile ../NWT/bin/tcp.ini -DCPSTransportDebugLevel 0 -w'"                    
                 }
             }
         }
@@ -93,7 +93,7 @@ pipeline {
                     sh "kubectl exec -it ${subpodName} -- sh -c 'javac -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:classes ../NWT/src/NWT_DataReaderListenerImpl.java'"
                     sh "kubectl exec -it ${subpodName} -- sh -c 'rm /DDS/NWT/bin/NWT_DataReaderListenerImpl.class'"
                     sh "kubectl exec -it ${subpodName} -- sh -c 'mv /DDS/NWT/src/NWT_DataReaderListenerImpl.class /DDS/NWT/bin/.'"
-                    sh "kubectl exec -it ${podName} -- sh -c 'java -ea -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:classes -Djava.library.path=$DDS_ROOT/lib ../NWT/bin/NWT_TestSubscriber -DCPSConfigFile tcp.ini -DCPSTransportDebugLevel 0 -r'"
+                    sh "kubectl exec -it ${podName} -- sh -c 'java -ea -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:classes -Djava.library.path=$DDS_ROOT/lib ../NWT/bin/NWT_TestSubscriber -DCPSConfigFile ../NWT/bin/tcp.ini -DCPSTransportDebugLevel 0 -r'"
                 }
             }
         }
