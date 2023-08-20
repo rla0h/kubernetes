@@ -10,8 +10,8 @@ pipeline {
             steps {
                 script {
                     def kubectlOutput = sh(script: "kubectl --kubeconfig=${env.admKUBECONFIG} get pods", returnStdout: true).trim()
-                    echo kubectlOutput
-                    def topNodesOutput = sh(script: 'kubectl top nodes', returnStdout: true)
+            
+                    def topNodesOutput = sh(script: "kubectl --kubeconfig=${env.admKUBECONFIG} top nodes", returnStdout: true).trim()
                     
                     echo topNodesOutput                
                     echo kubectlOutput
