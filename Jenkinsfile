@@ -22,7 +22,8 @@ pipeline {
         stage('Get Pod IPs and Apply to /etc/hosts (on Pub & Sub)') {
             steps {
                 script {
-                    def podInfo = sh(script: 'kubectl get pods -o=jsonpath=\'{range .items[*]}{.status.podIP}{"\\t"}{.metadata.name}{"\\n"}{end}\'', returnStdout: true).trim()
+                    def podInfo = sh(script: """
+                        kubectl get --kubeconfig=${env.admKUBECONFIG} pods -o=jsonpath=\'{range .items[*]}{.status.podIP}{"\\t"}{.metadata.name}{"\\n"}{end}\'""", returnStdout: true).trim()
                     podInfo = podInfo.replaceAll("(?m)^\\s*(.*)\\t(.*)\\s*\$", '$1 $2')
                     def pubpodName = sh(script: "kubectl --kubeconfig=${env.admKUBECONFIG} get pods -o name | grep opendds-pub* | cut -d/ -f 2", returnStdout: true).trim()
                     def subpodName = sh(script: "kubectl --kubeconfig=${env.admKUBECONFIG} get pods -o name | grep opendds-sub* | cut -d/ -f 2", returnStdout: true).trim()
