@@ -77,7 +77,7 @@ pipeline {
             steps {
                 script {
                     def pub_source = '/home/pin/NWT_TestPublisher.java'
-                    def pubpodName = sh(script: "kubectl get pods -o name | grep opendds-pub* | cut -d/ -f 2", returnStdout: true).trim()                   
+                    def pubpodName = sh(script: "kubectl --kubeconfig=${env.admKUBECONFIG} get pods -o name | grep opendds-pub* | cut -d/ -f 2", returnStdout: true).trim()                   
                     sh "kubectl --kubeconfig=${env.admKUBECONFIG} cp ${pub_source} ${pubpodName}:../NWT/src/NWT_TestPublisher.java"
                     sh "kubectl --kubeconfig=${env.admKUBECONFIG} exec -it ${pubpodName} -- sh -c 'javac -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:classes ../NWT/src/NWT_TestPublisher.java'"
                     sh "kubectl --kubeconfig=${env.admKUBECONFIG} exec -it ${pubpodName} -- sh -c 'rm /DDS/NWT/bin/NWT_TestPublisher.class'"
@@ -92,7 +92,7 @@ pipeline {
             steps {
                 script {
                     def sub_source = '/home/pin/NWT_DataReaderListenerImpl.java'
-                    def subpodName = sh(script: "kubectl get pods -o name | grep opendds-sub* | cut -d/ -f 2", returnStdout: true).trim()                   
+                    def subpodName = sh(script: "kubectl --kubeconfig=${env.admKUBECONFIG} get pods -o name | grep opendds-sub* | cut -d/ -f 2", returnStdout: true).trim()                   
                     sh "kubectl --kubeconfig=${env.admKUBECONFIG} cp ${sub_source} ${subpodName}:../NWT/src/NWT_DataReaderListenerImpl.java"
                     sh "kubectl --kubeconfig=${env.admKUBECONFIG} exec -it ${subpodName} -- sh -c 'javac -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:classes ../NWT/src/NWT_DataReaderListenerImpl.java'"
                     sh "kubectl --kubeconfig=${env.admKUBECONFIG} exec -it ${subpodName} -- sh -c 'rm /DDS/NWT/bin/NWT_DataReaderListenerImpl.class'"
