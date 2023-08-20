@@ -22,18 +22,18 @@ pipeline {
         stage('Get Pod IPs and Apply to /etc/hosts (on Pub & Sub)') {
             steps {
                 script {
-                    def podInfo = sh(script: 'kubectl get pods -o=jsonpath=\'{range .items[*]}{.status.podIP}{"\\t"}{.metadata.name}{"\\n"}{end}\'', returnStdout: true).trim()
+                    def podInfo = sh(script: "kubectl --kubeconfig=${env.admKUBECONFIG} get pods -o=jsonpath=\'{range .items[*]}{.status.podIP}{"\\t"}{.metadata.name}{"\\n"}{end}\'", returnStdout: true).trim()
                     podInfo = podInfo.replaceAll("(?m)^\\s*(.*)\\t(.*)\\s*\$", '$1 $2')
-                    def pubpodName = sh(script: "kubectl get pods -o name | grep opendds-pub* | cut -d/ -f 2", returnStdout: true).trim()
-                    def subpodName = sh(script: "kubectl get pods -o name | grep opendds-sub* | cut -d/ -f 2", returnStdout: true).trim()
+                    def pubpodName = sh(script: "kubectl --kubeconfig=${env.admKUBECONFIG} get pods -o name | grep opendds-pub* | cut -d/ -f 2", returnStdout: true).trim()
+                    def subpodName = sh(script: "kubectl --kubeconfig=${env.admKUBECONFIG} get pods -o name | grep opendds-sub* | cut -d/ -f 2", returnStdout: true).trim()
                     
                     def fPath = 'pod-info.txt'
                     writeFile file: fPath, text: podInfo+"\n"
                     
-                    sh "kubectl cp ${fPath} ${pubpodName}:./pod-info.txt"
-                    sh "kubectl cp ${fPath} ${subpodName}:./pod-info.txt"
-                    sh "kubectl exec -it ${pubpodName} -- sh -c 'cat pod-info.txt >> /etc/hosts'"
-                    sh "kubectl exec -it ${subpodName} -- sh -c 'cat pod-info.txt >> /etc/hosts'"
+                    sh "kubectl --kubeconfig=${env.admKUBECONFIG} cp ${fPath} ${pubpodName}:./pod-info.txt"
+                    sh "kubectl --kubeconfig=${env.admKUBECONFIG} cp ${fPath} ${subpodName}:./pod-info.txt"
+                    sh "kubectl --kubeconfig=${env.admKUBECONFIG} exec -it ${pubpodName} -- sh -c 'cat pod-info.txt >> /etc/hosts'"
+                    sh "kubectl --kubeconfig=${env.admKUBECONFIG} exec -it ${subpodName} -- sh -c 'cat pod-info.txt >> /etc/hosts'"
                 }
             }
         }
@@ -77,10 +77,10 @@ pipeline {
                 script {
                     def pub_source = '/home/pin/NWT_TestPublisher.java'
                     def pubpodName = sh(script: "kubectl get pods -o name | grep opendds-pub* | cut -d/ -f 2", returnStdout: true).trim()                   
-                    sh "kubectl cp ${pub_source} ${pubpodName}:../NWT/src/NWT_TestPublisher.java"
-                    sh "kubectl exec -it ${pubpodName} -- sh -c 'javac -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:classes ../NWT/src/NWT_TestPublisher.java'"
-                    sh "kubectl exec -it ${pubpodName} -- sh -c 'rm /DDS/NWT/bin/NWT_TestPublisher.class'"
-                    sh "kubectl exec -it ${pubpodName} -- sh -c 'mv /DDS/NWT/src/NWT_TestPublisher.class /DDS/NWT/bin/'"
+                    sh "kubectl --kubeconfig=${env.admKUBECONFIG} cp ${pub_source} ${pubpodName}:../NWT/src/NWT_TestPublisher.java"
+                    sh "kubectl --kubeconfig=${env.admKUBECONFIG} exec -it ${pubpodName} -- sh -c 'javac -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:classes ../NWT/src/NWT_TestPublisher.java'"
+                    sh "kubectl --kubeconfig=${env.admKUBECONFIG} exec -it ${pubpodName} -- sh -c 'rm /DDS/NWT/bin/NWT_TestPublisher.class'"
+                    sh "kubectl --kubeconfig=${env.admKUBECONFIG} exec -it ${pubpodName} -- sh -c 'mv /DDS/NWT/src/NWT_TestPublisher.class /DDS/NWT/bin/'"
 
                     //sh "kubectl exec -it ${pubpodName} -- sh -c 'cd ../NWT/bin && java -ea -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:class -Djava.library.path=/DDS/OpenDDS-DDS-3.23.1/lib/ NWT_TestPublisher -DCPSConfigFile tcp.ini -DCPSTransportDebugLevel 0 -w'"                    
                 }
@@ -92,10 +92,10 @@ pipeline {
                 script {
                     def sub_source = '/home/pin/NWT_DataReaderListenerImpl.java'
                     def subpodName = sh(script: "kubectl get pods -o name | grep opendds-sub* | cut -d/ -f 2", returnStdout: true).trim()                   
-                    sh "kubectl cp ${sub_source} ${subpodName}:../NWT/src/NWT_DataReaderListenerImpl.java"
-                    sh "kubectl exec -it ${subpodName} -- sh -c 'javac -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:classes ../NWT/src/NWT_DataReaderListenerImpl.java'"
-                    sh "kubectl exec -it ${subpodName} -- sh -c 'rm /DDS/NWT/bin/NWT_DataReaderListenerImpl.class'"
-                    sh "kubectl exec -it ${subpodName} -- sh -c 'mv /DDS/NWT/src/NWT_DataReaderListenerImpl.class /DDS/NWT/bin/.'"
+                    sh "kubectl --kubeconfig=${env.admKUBECONFIG} cp ${sub_source} ${subpodName}:../NWT/src/NWT_DataReaderListenerImpl.java"
+                    sh "kubectl --kubeconfig=${env.admKUBECONFIG} exec -it ${subpodName} -- sh -c 'javac -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:classes ../NWT/src/NWT_DataReaderListenerImpl.java'"
+                    sh "kubectl --kubeconfig=${env.admKUBECONFIG} exec -it ${subpodName} -- sh -c 'rm /DDS/NWT/bin/NWT_DataReaderListenerImpl.class'"
+                    sh "kubectl --kubeconfig=${env.admKUBECONFIG} exec -it ${subpodName} -- sh -c 'mv /DDS/NWT/src/NWT_DataReaderListenerImpl.class /DDS/NWT/bin/.'"
                     //sh "kubectl exec -it ${subpodName} -- sh -c 'cd ../NWT/bin && java -ea -cp classes:/DDS/NWT/lib/*:/DDS/NWT/bin:classes -Djava.library.path=/DDS/OpenDDS-DDS-3.23.1/lib/ NWT_TestSubscriber -DCPSConfigFile tcp.ini -DCPSTransportDebugLevel 0 -r'"
                 }
             }
